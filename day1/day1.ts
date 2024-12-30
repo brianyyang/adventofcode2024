@@ -28,12 +28,25 @@ async function readFileAndParseColumns(
 
 const filePath = process.argv[2];
 const { column1, column2 } = await readFileAndParseColumns(filePath);
+
+// part 1
 const sortedColumn1 = column1.sort();
 const sortedColumn2 = column2.sort();
-let sum = 0;
+let differenceSum = 0;
 
 sortedColumn1.map((n, index) => {
-  sum += Math.abs(n - sortedColumn2[index]);
+  differenceSum += Math.abs(n - sortedColumn2[index]);
 });
 
-console.log(sum);
+console.log('Total difference is: ' + differenceSum);
+
+// part 2
+const column2Map: Map<number, number> = new Map();
+column2.map((n) => {
+  column2Map.set(n, (column2Map.get(n) || 0) + 1);
+});
+
+let similarityScore = 0;
+column1.map((n) => (similarityScore += n * (column2Map.get(n) || 0)));
+
+console.log('Similarity score is: ' + similarityScore);
