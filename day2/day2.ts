@@ -53,5 +53,45 @@ inputRows.map((row) => {
 console.log('Total number of safe reports is: ' + safeCount);
 
 // part 2
+const isRowSafeExceptOne = (row: number[]): boolean => {
+  let rowIsUnsafe = false;
+  let [prev, ...rest] = row;
+  let isIncreasing = prev < rest[0];
+  for (let index = 0; index < rest.length; index++) {
+    const current = rest[index];
+    // check if all increasing or decreasing
+    if (isIncreasing) {
+      if (prev >= current) rowIsUnsafe = true;
+    } else {
+      if (prev <= current) rowIsUnsafe = true;
+    }
+    // check if difference is 1, 2, or 3
+    const difference = Math.abs(prev - current);
+    if (difference < 1 || difference > 3) rowIsUnsafe = true;
+    // if row is unsafe, try checking if removing prev or current is safe
+    if (rowIsUnsafe) {
+      // indexes are increased by one because
+      // we are currently looping through original row minus first element
+      const isConditionallySafe =
+        isRowSafe([
+          ...row.slice(0, index),
+          ...row.slice(index + 1, row.length),
+        ]) ||
+        isRowSafe([
+          ...row.slice(0, index + 1),
+          ...row.slice(index + 2, row.length),
+        ]);
+      return isConditionallySafe;
+    }
+    // update previous
+    prev = current;
+  }
+  return true;
+};
 
-console.log('Similarity score is: ');
+let safeCountUsingDamper = 0;
+inputRows.map((row) => {
+  if (isRowSafeExceptOne(row)) safeCountUsingDamper++;
+});
+
+console.log('Total number of safe reports is: ' + safeCountUsingDamper);
