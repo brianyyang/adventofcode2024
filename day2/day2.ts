@@ -73,6 +73,7 @@ const isRowSafeExceptOne = (row: number[]): boolean => {
       // indexes are increased by one because
       // we are currently looping through original row minus first element
       const isConditionallySafe =
+        isRowSafe([...row.slice(1, row.length)]) ||
         isRowSafe([
           ...row.slice(0, index),
           ...row.slice(index + 1, row.length),
